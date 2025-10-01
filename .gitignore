@@ -1,4 +1,8 @@
 .env
 /.env
 venv
-minio_data
+./db.sqlite3
+.db.sqlite3
+db.sqlite3
+__pycache__/
+migrations/

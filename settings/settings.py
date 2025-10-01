@@ -25,11 +25,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "drf_spectacular_sidecar",
-    "storages",
     # apps
     "users",
     "courses",
-    "payments",
     "orders",
     "codes",
 ]
@@ -102,7 +100,7 @@ AUTH_USER_MODEL = "users.User"
 
 # REST
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -135,12 +133,9 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = []
 STATIC_ROOT = BASE_DIR / ".." / "static"
 
+DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / ".." / "static" / "media"
-
-# PAYMENTS
-STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
-STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 
 # EMAIL
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -150,20 +145,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-
-#FILES
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-        "OPTIONS": {
-            "access_key": os.getenv("AWS_ACCESS_KEY_ID"),
-            "secret_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
-            "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),
-            "endpoint_url": os.getenv("AWS_S3_ENDPOINT_URL"),
-        },
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}

@@ -2,7 +2,6 @@ from django.db import models
 from courses.models import Course
 from users.models import User
 
-# Create your models here.
 class ActivationCode(models.Model):
     code = models.CharField(max_length=12, unique=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)

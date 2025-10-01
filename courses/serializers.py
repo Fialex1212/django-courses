@@ -1,17 +1,31 @@
-from .models import Course, Lesson
+from .models import Course, Lesson, HomeWork
 from rest_framework import serializers
-from drf_extra_fields.fields import FileField
-from django.core.files.storage import default_storage
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 
 
+class HomeWorkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomeWork
+        fields = [
+            "id",
+            "lesson",
+            "title",
+            "description",
+            "link",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "created_at", "updated_at"]
+
+
 class LessonSerializer(serializers.ModelSerializer):
-    video = FileField(
+    video = serializers.FileField(
         required=True,
         write_only=True,
-        help_text="Upload file",
+        help_text="Upload video file",
     )
-    video_url = serializers.SerializerMethodField()
+    video_url = serializers.SerializerMethodField(read_only=True)
+    homework = HomeWorkSerializer(many=True, read_only=True)
 
     class Meta:
         model = Lesson
@@ -21,37 +35,28 @@ class LessonSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "position",
-            "is_published",
+            "is_free",
             "duration_seconds",
             "created_at",
             "updated_at",
             "video",
             "video_url",
+            "homework"
         ]
         read_only_fields = [
             "id",
-            "video",
             "video_url",
             "created_at",
             "updated_at",
         ]
-    
+
     @extend_schema_field(OpenApiTypes.BINARY)
     def get_preview(self, obj):
         return obj.preview
 
     def create(self, validated_data):
-        video = validated_data.pop("video", None)
-        lesson = super().create(validated_data)
-        if video:
-            from django.core.files.storage import default_storage
+        return super().create(validated_data)
 
-            path = default_storage.save(f"lessons/videos/{video.name}", video)
-            lesson.video = path
-            lesson.save()
-        return lesson
-    
-    
     @extend_schema_field(OpenApiTypes.BINARY)
     def get_video(self, obj):
         return obj.video
@@ -61,18 +66,17 @@ class LessonSerializer(serializers.ModelSerializer):
         if not obj.video:
             return None
         request = self.context.get("request")
-        url = default_storage.url(obj.video.name)
         if request:
-            return request.build_absolute_uri(url)
-        return url
+            return request.build_absolute_uri(obj.video.url)
+        return obj.video.url
 
 
 class CourseSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
-    preview = FileField(
+    preview = serializers.ImageField(
         required=True,
         write_only=True,
-        help_text="Upload file",
+        help_text="Upload preview image",
     )
     preview_url = serializers.SerializerMethodField(read_only=True)
 
@@ -96,7 +100,9 @@ class CourseSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.URI)
     def get_preview_url(self, obj):
+        if not obj.preview:
+            return None
         request = self.context.get("request")
-        if obj.preview and request:
+        if request:
             return request.build_absolute_uri(obj.preview.url)
-        return None
+        return obj.preview.url

@@ -60,3 +60,12 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+
+
+class UserCourseAccess(models.Model):
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    course = models.ForeignKey("courses.Course", on_delete=models.CASCADE)
+    activated_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "course")

@@ -1,3 +1,6 @@
 from django.urls import path
+from .views import ActivateCodeView
 
-urlpatterns = []
+urlpatterns = [
+    path("activate/", ActivateCodeView.as_view(), name="activate-code"),
+]

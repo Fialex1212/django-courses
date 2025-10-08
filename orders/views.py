@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 from .models import Order
 from .serializers import OrderSerializer
 
-# Создать заказ (юзер -> pending)
+
 class CreateOrderView(generics.CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -14,7 +14,6 @@ class CreateOrderView(generics.CreateAPIView):
         serializer.save(user=self.request.user, amount=amount)
 
 
-# Получить список своих заказов
 class OrderListView(generics.ListAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -23,7 +22,6 @@ class OrderListView(generics.ListAPIView):
         return Order.objects.filter(user=self.request.user)
 
 
-# Детали конкретного заказа
 class OrderDetailView(generics.RetrieveAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer

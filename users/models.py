@@ -30,7 +30,7 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     email = models.EmailField(unique=True, verbose_name=("Email address"))
     telegram = models.CharField(
-        unique=True, null=False, blank=False, verbose_name=("Telegram nick")
+        unique=True, null=True, blank=True, verbose_name=("Telegram nick")
     )
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=True, blank=True)
 

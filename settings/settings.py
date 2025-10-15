@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -112,6 +113,14 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),  # срок жизни access-токена
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),    # срок жизни refresh-токена
+    "ROTATE_REFRESH_TOKENS": True,                   # при каждом обновлении выдаётся новый refresh
+    "BLACKLIST_AFTER_ROTATION": True,                # старый refresh становится недействительным
+    "UPDATE_LAST_LOGIN": True,                       # обновлять время последнего входа
 }
 
 # CORS&HOSTS

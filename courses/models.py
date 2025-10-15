@@ -3,6 +3,12 @@ from django.db import models
 
 class Course(models.Model):
     title = models.CharField(max_length=255, verbose_name="Course Title")
+    video = models.FileField(
+        upload_to="courses/videos/",
+        blank=True,
+        null=True,
+        verbose_name="Video file",
+    )
     price = models.IntegerField(blank=True, null=True, verbose_name="Price")
     discount_price = models.IntegerField(
         blank=True, null=True, verbose_name="Discounted price"

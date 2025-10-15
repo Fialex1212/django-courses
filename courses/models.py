@@ -3,7 +3,7 @@ from django.db import models
 
 class Course(models.Model):
     title = models.CharField(max_length=255, verbose_name="Course Title")
-    subtitle = models.CharField(max_length=255, verbose_name="Course Subtitle")
+    subtitle = models.CharField(max_length=255, null=True, blank=True, verbose_name="Course Subtitle")
     video = models.FileField(
         upload_to="courses/videos/",
         blank=True,

@@ -3,7 +3,9 @@ from django.db import models
 
 class Course(models.Model):
     title = models.CharField(max_length=255, verbose_name="Course Title")
-    subtitle = models.CharField(max_length=255, null=True, blank=True, verbose_name="Course Subtitle")
+    subtitle = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="Course Subtitle"
+    )
     video = models.FileField(
         upload_to="courses/videos/",
         blank=True,
@@ -18,7 +20,6 @@ class Course(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name="Description")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
-
     preview = models.FileField(
         upload_to="courses/previews/",
         blank=True,
@@ -41,7 +42,9 @@ class Lesson(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name="Description")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
-
+    duration = models.IntegerField(
+        null=True, blank=True, default=0, verbose_name="Duration"
+    )
     position = models.PositiveIntegerField(
         default=1, db_index=True, verbose_name="Position"
     )

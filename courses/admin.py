@@ -27,11 +27,26 @@ class LessonInline(admin.TabularInline):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ("title", "course", "position", "is_free", "video")
+    list_display = (
+        "title",
+        "course",
+        "position",
+        "is_free",
+        "video",
+        "duration_seconds",
+    )
     list_filter = ("course", "is_free")
     search_fields = ("title", "description")
     ordering = ("course", "position")
-    fields = ("course", "title", "description", "position", "is_free", "video")
+    fields = (
+        "course",
+        "title",
+        "description",
+        "position",
+        "is_free",
+        "video",
+        "duration_seconds",
+    )
     inlines = [HomeWorkInline]
 
     def get_changeform_initial_data(self, request):

@@ -14,6 +14,7 @@ class HomeWorkSerializer(serializers.ModelSerializer):
             "link",
             "created_at",
             "updated_at",
+            "duration_seconds",
         ]
         read_only_fields = ["id", "created_at", "updated_at"]
 
@@ -85,7 +86,9 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
+            "subtitle",
             "price",
+            "discount_price",
             "slug",
             "description",
             "preview",

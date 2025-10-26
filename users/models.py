@@ -65,7 +65,7 @@ class User(AbstractUser):
 
 
 class UserCourseAccess(models.Model):
-    wuser = models.ForeignKey(
+    user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="course_accesses"
     )
     course = models.ForeignKey("courses.Course", on_delete=models.CASCADE)

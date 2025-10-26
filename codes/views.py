@@ -8,7 +8,7 @@ from .serializers import ActivateCodeSerializer
 
 class ActivateCodeView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = ActivateCodeSerializer 
+    serializer_class = ActivateCodeSerializer
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -21,7 +21,9 @@ class ActivateCodeView(generics.GenericAPIView):
             return Response({"error": "Неверный код"}, status=status.HTTP_404_NOT_FOUND)
 
         if code.is_used():
-            return Response({"error": "Код уже использован"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Код уже использован"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         code.activated_by = request.user
         code.used_at = timezone.now()
@@ -29,8 +31,11 @@ class ActivateCodeView(generics.GenericAPIView):
 
         UserCourseAccess.objects.get_or_create(user=request.user, course=code.course)
 
-        return Response({
-            "message": f"Курс '{code.course.title}' успешно активирован!",
-            "course_id": code.course.id,
-            "course_title": code.course.title,
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "message": f"Курс '{code.course.title}' успешно активирован!",
+                "course_id": code.course.id,
+                "course_title": code.course.title,
+            },
+            status=status.HTTP_200_OK,
+        )

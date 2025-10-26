@@ -16,6 +16,8 @@ def order_pre_save(sender, instance, **kwargs):
 @receiver(post_save, sender=Order)
 def order_post_save(sender, instance, created, **kwargs):
     old_status = getattr(instance, "_old_status", None)
+
     if not created and old_status != "paid" and instance.status == "paid":
-        if not instance.user.purchased_codes.filter(course=instance.course).exists():
-            confirm_order(instance)
+        confirm_order(
+            instance
+        )

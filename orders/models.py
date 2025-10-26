@@ -4,9 +4,9 @@ from courses.models import Course
 
 class Order(models.Model):
     STATUS_CHOICES = [
-        ("pending", "Ожидает оплаты"),
-        ("paid", "Оплачен"),
-        ("canceled", "Отменён"),
+        ("pending", "Очікує оплати"),
+        ("paid", "Оплачено"),
+        ("canceled", "Скасовано"),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -16,4 +16,4 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Order {self.id} — {self.user.email} — {self.status}"
+        return f"Замовлення {self.id} — {self.user.email} — {self.status}"

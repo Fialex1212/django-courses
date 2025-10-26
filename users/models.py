@@ -28,6 +28,8 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    first_name = None
+    last_name = None
     email = models.EmailField(unique=True, verbose_name=("Email address"))
     telegram = models.CharField(
         unique=True, null=True, blank=True, verbose_name=("Telegram nick")
@@ -50,7 +52,7 @@ class User(AbstractUser):
     )
 
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email", "first_name", "last_name", "telegram"]
+    REQUIRED_FIELDS = ["email", "telegram"]
 
     objects = CustomUserManager()
 
@@ -63,9 +65,22 @@ class User(AbstractUser):
 
 
 class UserCourseAccess(models.Model):
-    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    wuser = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="course_accesses"
+    )
     course = models.ForeignKey("courses.Course", on_delete=models.CASCADE)
     activated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("user", "course")
+        verbose_name = "Course Access"
+        verbose_name_plural = "Courses Accesses"
+
+
+class UserLessonAccess(models.Model):
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    lesson = models.ForeignKey("courses.Lesson", on_delete=models.CASCADE)
+    unlocked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Lesson Access"
+        verbose_name_plural = "Lesson Accesses"

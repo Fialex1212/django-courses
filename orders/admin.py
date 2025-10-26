@@ -12,6 +12,6 @@ class OrderAdmin(admin.ModelAdmin):
         for order in queryset:
             order.status = "paid"
             order.save()
-        self.message_user(request, "Выбранные заказы отмечены как оплаченные")
+        self.message_user(request, "Вибрані замовлення позначено як оплачені")
 
-    mark_as_paid.short_description = "Отметить как оплаченные"
+    mark_as_paid.short_description = "Позначити як оплачені"

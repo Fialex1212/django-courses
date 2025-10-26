@@ -1,27 +1,52 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.admin import ModelAdmin
-from .models import User, UserCourseAccess
+from courses.models import Lesson
+from .models import User, UserCourseAccess, UserLessonAccess
+from django.core.exceptions import ValidationError
 
 
+# --- Inline для уроков ---
+class UserLessonAccessInline(admin.TabularInline):
+    model = UserLessonAccess
+    extra = 0
+    fields = ("lesson",)
+    readonly_fields = ()
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        if obj:
+            completed_lessons_ids = UserLessonAccess.objects.filter(
+                user=obj
+            ).values_list("lesson_id", flat=True)
+            formset.form.base_fields["lesson"].queryset = Lesson.objects.exclude(
+                id__in=completed_lessons_ids
+            )
+        return formset
+
+
+# --- Inline для курсов ---
+class UserCourseAccessInline(admin.TabularInline):
+    model = UserCourseAccess
+    extra = 0
+    fields = ("course", "activated_at")
+    readonly_fields = ("activated_at",)
+
+
+# --- Админка пользователя ---
 @admin.register(User)
-class UserAdmin(BaseUserAdmin):
+class CustomUserAdmin(BaseUserAdmin):
     list_display = (
         "username",
         "email",
-        "first_name",
-        "last_name",
         "is_staff",
         "is_active",
     )
     list_filter = ("is_staff", "is_active", "groups")
-
-    search_fields = ("email", "first_name", "last_name")
+    search_fields = ("email",)
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
-        ("Personal info", {"fields": ("first_name", "last_name")}),
+        (None, {"fields": ("username", "email", "password")}),
         (
             "Permissions",
             {
@@ -45,8 +70,6 @@ class UserAdmin(BaseUserAdmin):
                 "fields": (
                     "username",
                     "email",
-                    "first_name",
-                    "last_name",
                     "password1",
                     "password2",
                     "is_active",
@@ -59,15 +82,4 @@ class UserAdmin(BaseUserAdmin):
         ),
     )
 
-
-@admin.register(UserCourseAccess)
-class UserCourseAccessAdmin(ModelAdmin):
-    list_display = (
-        "user",
-        "course",
-        "activated_at",
-    )
-    list_filter = ("course",)
-
-    search_fields = ("user", "course")
-    ordering = ("activated_at",)
+    inlines = [UserCourseAccessInline, UserLessonAccessInline]

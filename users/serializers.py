@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import User
+from users.models import User, UserCourseAccess
+from courses.models import Course
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -19,7 +20,22 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+class CourseShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ["id", "title"]
+
+
+class UserCourseAccessSerializer(serializers.ModelSerializer):
+    course = CourseShortSerializer(read_only=True)
+
+    class Meta:
+        model = UserCourseAccess
+        fields = ["course", "activated_at"]
+
+
 class UserSerializer(serializers.ModelSerializer):
+    courses = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -28,5 +44,17 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             "first_name",
             "last_name",
+            "telegram",
             "email",
+            "courses",
+        ]
+
+    def get_courses(self, obj):
+        accesses = obj.course_accesses.select_related("course")
+        return [
+            {
+                "id": access.course.id,
+                "title": access.course.title,
+            }
+            for access in accesses
         ]

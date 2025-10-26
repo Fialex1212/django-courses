@@ -1,10 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import viewsets, permissions
-from .models import Course, Lesson
-from .serializers import CourseSerializer, LessonSerializer
+from rest_framework import viewsets, permissions, status
+from courses.models import Course, Lesson
+from courses.serializers import CourseSerializer, LessonSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+from users.models import UserCourseAccess
+from django.db.models import Q
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -17,7 +19,33 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        accessible_course_ids = UserCourseAccess.objects.filter(user=user).values_list(
+            "course_id", flat=True
+        )
+
+        return Lesson.objects.filter(
+            Q(is_free=True) | Q(course_id__in=accessible_course_ids)
+        )
+
+    def retrieve(self, request, *args, **kwargs):
+        lesson = self.get_object()
+        user = request.user
+
+        has_access = (
+            lesson.is_free
+            or UserCourseAccess.objects.filter(user=user, course=lesson.course).exists()
+        )
+
+        if not has_access:
+            return Response({"detail": "Урок недоступний"}, status=403)
+
+        serializer = self.get_serializer(lesson)
+        return Response(serializer.data)
 
 
 class UploadLessonVideo(APIView):
@@ -28,4 +56,4 @@ class UploadLessonVideo(APIView):
         lesson = Lesson.objects.get(pk=lesson_id)
         file_obj = request.data["video"]
         lesson.video.save(file_obj.name, file_obj, save=True)
-        return Response({"message": "Видео загружено"})
+        return Response({"message": "Відео завантажено"})

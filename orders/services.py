@@ -13,8 +13,8 @@ def confirm_order(order):
     )
 
     send_mail(
-        subject="Ваш код активации",
-        message=f"Спасибо за покупку курса {order.course.title}!\n\nКод активации: {code.code}",
+        subject="Ваш код активації",
+        message=f"Дякуємо за покупку курсу {order.course.title}!\n\nКод активації: {code.code}",
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[order.user.email],
     )

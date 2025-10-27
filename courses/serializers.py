@@ -1,6 +1,7 @@
-from .models import Course, Lesson, HomeWork
+from courses.models import Course, Lesson, HomeWork
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
+from users.models import UserCourseAccess
 
 
 class HomeWorkSerializer(serializers.ModelSerializer):
@@ -41,7 +42,7 @@ class LessonSerializer(serializers.ModelSerializer):
             "updated_at",
             "video",
             "video_url",
-            "homework"
+            "homework",
         ]
         read_only_fields = [
             "id",
@@ -50,25 +51,36 @@ class LessonSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
-    @extend_schema_field(OpenApiTypes.BINARY)
-    def get_preview(self, obj):
-        return obj.preview
-
-    def create(self, validated_data):
-        return super().create(validated_data)
-
-    @extend_schema_field(OpenApiTypes.BINARY)
-    def get_video(self, obj):
-        return obj.video
-
     @extend_schema_field(OpenApiTypes.URI)
     def get_video_url(self, obj):
+        request = self.context.get("request")
         if not obj.video:
             return None
-        request = self.context.get("request")
         if request:
             return request.build_absolute_uri(obj.video.url)
         return obj.video.url
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get("request")
+        user = request.user if request else None
+
+        has_access = instance.is_free or (
+            user
+            and user.is_authenticated
+            and UserCourseAccess.objects.filter(
+                user=user, course=instance.course
+            ).exists()
+        )
+
+        if not has_access:
+            data["video_url"] = None
+            data["video_locked"] = True
+        else:
+            data["video_locked"] = False
+
+        return data
+
 
 
 class CourseSerializer(serializers.ModelSerializer):

@@ -19,10 +19,12 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         user = self.request.user
+        if not user.is_authenticated:
+            return Lesson.objects.filter(is_free=True)
 
         accessible_course_ids = UserCourseAccess.objects.filter(user=user).values_list(
             "course_id", flat=True
@@ -32,20 +34,6 @@ class LessonViewSet(viewsets.ModelViewSet):
             Q(is_free=True) | Q(course_id__in=accessible_course_ids)
         )
 
-    def retrieve(self, request, *args, **kwargs):
-        lesson = self.get_object()
-        user = request.user
-
-        has_access = (
-            lesson.is_free
-            or UserCourseAccess.objects.filter(user=user, course=lesson.course).exists()
-        )
-
-        if not has_access:
-            return Response({"detail": "Урок недоступний"}, status=403)
-
-        serializer = self.get_serializer(lesson)
-        return Response(serializer.data)
 
 
 class UploadLessonVideo(APIView):

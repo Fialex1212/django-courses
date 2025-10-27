@@ -82,7 +82,6 @@ class LessonSerializer(serializers.ModelSerializer):
         return data
 
 
-
 class CourseSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
     preview = serializers.ImageField(
@@ -91,6 +90,7 @@ class CourseSerializer(serializers.ModelSerializer):
         help_text="Upload preview image",
     )
     preview_url = serializers.SerializerMethodField(read_only=True)
+    preview_video = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Course
@@ -104,6 +104,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "description",
             "preview",
             "preview_url",
+            "preview_video",
             "created_at",
             "updated_at",
             "lessons",
@@ -121,3 +122,12 @@ class CourseSerializer(serializers.ModelSerializer):
         if request:
             return request.build_absolute_uri(obj.preview.url)
         return obj.preview.url
+
+    @extend_schema_field(OpenApiTypes.URI)
+    def get_preview_video(self, obj):
+        if not obj.video:
+            return None
+        request = self.context.get("request")
+        if request:
+            return request.build_absolute_uri(obj.video.url)
+        return obj.video.url

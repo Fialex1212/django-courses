@@ -22,17 +22,7 @@ class LessonViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
-        user = self.request.user
-        if not user.is_authenticated:
-            return Lesson.objects.filter(is_free=True)
-
-        accessible_course_ids = UserCourseAccess.objects.filter(user=user).values_list(
-            "course_id", flat=True
-        )
-
-        return Lesson.objects.filter(
-            Q(is_free=True) | Q(course_id__in=accessible_course_ids)
-        )
+        return Lesson.objects.all()
 
 
 

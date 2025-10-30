@@ -2,7 +2,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from codes.models import ActivationCode
 from codes.utils import generate_activation_code
+from concurrent.futures import ThreadPoolExecutor
 
+executor = ThreadPoolExecutor(max_workers=4)
+
+def send_email_async(subject, message, from_email, recipient_list):
+    executor.submit(send_mail, subject, message, from_email, recipient_list)
 
 def confirm_order(order):
     code = ActivationCode.objects.create(
@@ -12,7 +17,7 @@ def confirm_order(order):
         price_paid=order.amount,
     )
 
-    send_mail(
+    send_email_async(
         subject="Ваш код активації",
         message=f"Дякуємо за покупку курсу {order.course.title}!\n\nКод активації: {code.code}",
         from_email=settings.DEFAULT_FROM_EMAIL,
@@ -20,3 +25,4 @@ def confirm_order(order):
     )
 
     return code
+

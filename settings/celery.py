@@ -1,8 +1,9 @@
+from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project_name.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.settings')
 
-app = Celery('infohub')
+app = Celery('django-courses')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()

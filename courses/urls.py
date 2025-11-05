@@ -8,5 +8,4 @@ router.register(r"lessons", LessonViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("upload-video/<int:lesson_id>/", UploadLessonVideo.as_view(), name="upload-video"),
 ]

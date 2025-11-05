@@ -8,9 +8,8 @@ def order_post_save(sender, instance, created, **kwargs):
     old_status = getattr(instance, "_old_status", None)
 
     if not created and old_status != "paid" and instance.status == "paid":
-        # Запуск асинхронной задачи
         confirm_order_task.delay(
-            order_id=instance.course.id,
+            order_id=instance.id,
             course_title=instance.course.title,
             user_email=instance.user.email,
             amount=instance.amount,

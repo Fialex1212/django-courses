@@ -65,7 +65,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "settings.wsgi.application"
 
-#DEV
+# DEV
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -73,7 +73,7 @@ WSGI_APPLICATION = "settings.wsgi.application"
 #     }
 # }
 
-#PROD
+# PROD
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -123,14 +123,16 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
 }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),  # срок жизни access-токена
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),    # срок жизни refresh-токена
-    "ROTATE_REFRESH_TOKENS": True,                   # при каждом обновлении выдаётся новый refresh
-    "BLACKLIST_AFTER_ROTATION": True,                # старый refresh становится недействительным
-    "UPDATE_LAST_LOGIN": True,                       # обновлять время последнего входа
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),  # срок жизни refresh-токена
+    "ROTATE_REFRESH_TOKENS": True,  # при каждом обновлении выдаётся новый refresh
+    "BLACKLIST_AFTER_ROTATION": True,  # старый refresh становится недействительным
+    "UPDATE_LAST_LOGIN": True,  # обновлять время последнего входа
 }
 
 # CORS&HOSTS
@@ -139,18 +141,18 @@ ALLOWED_HOSTS = ["*"]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost",
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
-    'http://152.53.18.199',
-    'http://152.53.18.199:8000',
-    'http://152.53.18.199:8081',
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://152.53.18.199",
+    "http://152.53.18.199:8000",
+    "http://152.53.18.199:8081",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
-    'http://152.53.18.199:8000',
-    'http://152.53.18.199:8081',
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://152.53.18.199:8000",
+    "http://152.53.18.199:8081",
 ]
 
 SESSION_COOKIE_SECURE = False
@@ -179,14 +181,18 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-#CELERY
+# CELERY
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Europe/Kiev'
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Europe/Kiev"
 
-
-CELERY_BROKER_URL = 'memory://'
-CELERY_TASK_ALWAYS_EAGER = True
+# REDIS
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://localhost:6379/1",
+    }
+}

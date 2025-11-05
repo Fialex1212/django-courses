@@ -36,7 +36,7 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     course = models.ForeignKey(
-        Course, related_name="lessons", on_delete=models.CASCADE, verbose_name="Course"
+        Course, related_name="lessons", on_delete=models.CASCADE, db_index=True
     )
     title = models.CharField(max_length=255, verbose_name="Lesson Title")
     description = models.TextField(blank=True, null=True, verbose_name="Description")
@@ -76,7 +76,7 @@ class Lesson(models.Model):
 
 class HomeWork(models.Model):
     lesson = models.ForeignKey(
-        Lesson, related_name="homework", on_delete=models.CASCADE, verbose_name="Lesson"
+        Lesson, related_name="homework", on_delete=models.CASCADE, db_index=True
     )
     title = models.CharField(max_length=255, verbose_name="Course Title")
     description = models.TextField(blank=True, null=True, verbose_name="Description")

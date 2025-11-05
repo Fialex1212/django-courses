@@ -5,19 +5,23 @@ from codes.models import ActivationCode
 from codes.utils import generate_activation_code
 
 @shared_task
-def confirm_order_task(order_id, course_title, user_email, amount):
+def confirm_order_task(order_id):
+    from orders.models import Order
+
+    order = Order.objects.get(id=order_id)
+
     code = ActivationCode.objects.create(
         code=generate_activation_code(),
-        course_id=order_id,
-        purchased_by_id=order_id,
-        price_paid=amount,
+        course=order.course,
+        purchased_by=order.user,
+        price_paid=order.amount,
     )
 
     send_mail(
         subject="Ваш код активації",
-        message=f"Дякуємо за покупку курсу {course_title}!\n\nКод активації: {code.code}",
+        message=f"Дякуємо за покупку курсу {order.course.title}!\n\nКод активації: {code.code}",
         from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[user_email],
+        recipient_list=[order.user.email],
     )
 
     return code.code

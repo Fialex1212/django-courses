@@ -38,11 +38,15 @@ class CustomUserAdmin(BaseUserAdmin):
     list_display = (
         "username",
         "email",
+        "telegram",
         "is_staff",
         "is_active",
     )
     list_filter = ("is_staff", "is_active", "groups")
-    search_fields = ("email",)
+    search_fields = (
+        "email",
+        "telegram",
+    )
     ordering = ("email",)
 
     fieldsets = (

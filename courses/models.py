@@ -24,7 +24,7 @@ class Course(models.Model):
         upload_to="courses/previews/",
         blank=True,
         null=True,
-        verbose_name="Preview Image",
+        verbose_name="Preview Image for course",
     )
 
     class Meta:
@@ -48,7 +48,12 @@ class Lesson(models.Model):
     position = models.PositiveIntegerField(
         default=1, db_index=True, verbose_name="Position"
     )
-
+    preview = models.FileField(
+        upload_to="lessons/previews/",
+        blank=True,
+        null=True,
+        verbose_name="Preview Image for lesson",
+    )
     video = models.FileField(
         upload_to="lessons/videos/",
         blank=True,

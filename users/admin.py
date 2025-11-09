@@ -50,7 +50,7 @@ class CustomUserAdmin(BaseUserAdmin):
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("username", "email", "password")}),
+        (None, {"fields": ("username", "email", "password", "telegram",)}),
         (
             "Permissions",
             {

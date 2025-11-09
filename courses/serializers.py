@@ -43,6 +43,7 @@ class LessonSerializer(serializers.ModelSerializer):
             "video",
             "video_url",
             "homework",
+            "preview"
         ]
         read_only_fields = [
             "id",

@@ -34,6 +34,7 @@ class LessonAdmin(admin.ModelAdmin):
         "is_free",
         "video",
         "duration_seconds",
+        "preview",
     )
     list_filter = ("course", "is_free")
     search_fields = ("title", "description")
@@ -46,6 +47,7 @@ class LessonAdmin(admin.ModelAdmin):
         "is_free",
         "video",
         "duration_seconds",
+        "preview",
     )
     inlines = [HomeWorkInline]
 

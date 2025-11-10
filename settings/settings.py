@@ -146,7 +146,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://152.53.18.199",
     "http://152.53.18.199:8000",
     "http://152.53.18.199:8081",
-    "http://liora.business/"
+    "https://liora.business/"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -154,7 +154,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://152.53.18.199:8000",
     "http://152.53.18.199:8081",
-    "http://liora.business/"
+    "https://liora.business/"
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True

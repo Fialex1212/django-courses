@@ -139,20 +139,29 @@ SIMPLE_JWT = {
 ALLOWED_HOSTS = ["*"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://liora.business/",
+    "http://localhost:3000",
+    "http://localhost",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://152.53.18.199",
+    "http://152.53.18.199:8000",
+    "http://152.53.18.199:8081",
+    "http://liora.business/"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://liora.business/",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://152.53.18.199:8000",
+    "http://152.53.18.199:8081",
+    "http://liora.business/"
 ]
 
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-
 CORS_ALLOW_ALL_ORIGINS = True
-
 CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # STATIC&MEDIA
 STATIC_URL = "staticfile/"

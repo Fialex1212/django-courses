@@ -1,15 +1,12 @@
 from celery import shared_task
 from django.core.mail import send_mail
 from django.conf import settings
-from codes.models import ActivationCode
-from codes.utils import generate_activation_code
 from orders.models import Order
 from codes.models import ActivationCode
-
+from codes.utils import generate_activation_code
 
 @shared_task
 def confirm_order_task(order_id):
-
     order = Order.objects.get(id=order_id)
 
     code = ActivationCode.objects.create(

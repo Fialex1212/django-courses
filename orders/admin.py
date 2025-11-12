@@ -8,7 +8,6 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "course", "amount", "status", "invoice", "created_at")
     list_filter = ("status", "course")
 
-    @admin.register(Order)
     def colored_status(self, obj):
         if obj.status == "paid":
             color = "green"

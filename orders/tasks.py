@@ -3,10 +3,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from codes.models import ActivationCode
 from codes.utils import generate_activation_code
+from orders.models import Order
+from codes.models import ActivationCode
+
 
 @shared_task
 def confirm_order_task(order_id):
-    from orders.models import Order
 
     order = Order.objects.get(id=order_id)
 

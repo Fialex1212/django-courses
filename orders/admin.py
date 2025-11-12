@@ -5,7 +5,7 @@ from .models import Order
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "course", "amount", "status", "invoice", "created_at")
+    list_display = ("id", "user", "course", "amount", "colored_status", "invoice", "created_at")
     list_filter = ("status", "course")
 
     def colored_status(self, obj):

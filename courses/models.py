@@ -26,6 +26,7 @@ class Course(models.Model):
         null=True,
         verbose_name="Preview Image for course",
     )
+    is_free = models.BooleanField(default=False, verbose_name="Is Free")
 
     class Meta:
         ordering = ["title"]

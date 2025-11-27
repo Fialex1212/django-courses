@@ -67,7 +67,14 @@ class LessonAdmin(admin.ModelAdmin):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ("title", "slug", "created_at", "updated_at", "preview")
+    list_display = (
+        "title",
+        "is_free",
+        "slug",
+        "created_at",
+        "updated_at",
+        "preview",
+    )
     list_filter = ("created_at",)
     search_fields = ("title", "description")
     prepopulated_fields = {"slug": ("title",)}

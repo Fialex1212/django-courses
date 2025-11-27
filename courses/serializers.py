@@ -16,7 +16,7 @@ class HomeWorkSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at", "is_free"]
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -43,7 +43,7 @@ class LessonSerializer(serializers.ModelSerializer):
             "video",
             "video_url",
             "homework",
-            "preview"
+            "preview",
         ]
         read_only_fields = [
             "id",

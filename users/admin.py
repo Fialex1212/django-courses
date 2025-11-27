@@ -5,7 +5,6 @@ from .models import User, UserCourseAccess, UserLessonAccess
 from django.core.exceptions import ValidationError
 
 
-# --- Inline для уроков ---
 class UserLessonAccessInline(admin.TabularInline):
     model = UserLessonAccess
     extra = 0
@@ -24,7 +23,6 @@ class UserLessonAccessInline(admin.TabularInline):
         return formset
 
 
-# --- Inline для курсов ---
 class UserCourseAccessInline(admin.TabularInline):
     model = UserCourseAccess
     extra = 0
@@ -32,7 +30,6 @@ class UserCourseAccessInline(admin.TabularInline):
     readonly_fields = ("activated_at",)
 
 
-# --- Админка пользователя ---
 @admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
     list_display = (
@@ -44,6 +41,7 @@ class CustomUserAdmin(BaseUserAdmin):
     )
     list_filter = ("is_staff", "is_active", "groups")
     search_fields = (
+        "username",
         "email",
         "telegram",
     )

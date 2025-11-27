@@ -16,7 +16,7 @@ class HomeWorkSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "created_at", "updated_at", "is_free"]
+        read_only_fields = ["id", "created_at", "updated_at",]
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -109,6 +109,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "lessons",
+            "is_free",
         ]
 
     @extend_schema_field(OpenApiTypes.BINARY)
